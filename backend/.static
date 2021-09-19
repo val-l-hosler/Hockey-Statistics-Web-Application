@@ -1,0 +1,35 @@
+export function process_all_teams(func) {
+    let teams_arr = []
+
+    fetch(("/teams"))
+        .then((response) => {
+            return response.json();
+        })
+        .then((response) => {
+            for (let i = 0; i < response.length; i++) {
+                let ob = new Object();
+                ob.name = response[i];
+
+                fetch(("/teams/" + response[i]))
+                    .then((response) => {
+                        return response.json();
+                    }).then((response) => {
+                        ob.players = response;
+                    }).catch(() => {
+                        console.log("Error fetching team members!");
+                    });
+
+                teams_arr.push(ob);
+            }
+        })
+        .then(js_avg_goals(teams_arr))
+        .catch(() => {
+            console.log("Error fetching teams!");
+        });
+}
+
+export function js_avg_goals(results) {
+    for(let i = 0; i < results.length; i++){
+        console.log(results[i]);
+    }
+}
